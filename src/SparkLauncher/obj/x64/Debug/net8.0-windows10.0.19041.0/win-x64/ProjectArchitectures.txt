@@ -1,1 +1,0 @@
-D:\Virtuals\SparkLauncher\SparkLauncher\SparkLauncher.csproj;x64

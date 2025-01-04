@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("SparkLauncher")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+ca6872d2b9235c342f65cd2fe769fd1823bfd09c")]
 [assembly: System.Reflection.AssemblyProductAttribute("SparkLauncher")]
 [assembly: System.Reflection.AssemblyTitleAttribute("SparkLauncher")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
