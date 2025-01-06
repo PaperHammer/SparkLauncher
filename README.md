@@ -1,2 +1,2 @@
 # SparkLauncher
-Used for self-check, verification, and hot updates before the launch of Windows applications.
+Used for self-check, verification, and modular updates before the launch of Windows applications.
