@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <winex:WindowEx
-    x:Class="SparkLauncher.MainWindow"
+    x:Class="SparkLauncher.WinUI.MainWindow"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:SparkLauncher"
@@ -125,6 +125,7 @@
                                     Value="20"/>
 
                                 <TextBlock
+                                    LineHeight="24"
                                     Text="20%"/>
                             </StackPanel>
                         </StackPanel>
@@ -189,6 +190,7 @@
                                     Value="20"/>
 
                                 <TextBlock
+                                    LineHeight="24"
                                     Text="20%"/>
                             </StackPanel>
                         </StackPanel>
@@ -253,6 +255,7 @@
                                     Value="20"/>
 
                                 <TextBlock
+                                    LineHeight="24"
                                     Text="20%"/>
                             </StackPanel>
                         </StackPanel>

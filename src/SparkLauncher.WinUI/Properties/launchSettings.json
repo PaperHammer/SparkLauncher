@@ -1,9 +1,9 @@
 {
   "profiles": {
-    "SparkLauncher (Package)": {
+    "SparkLauncher.WinUI (Package)": {
       "commandName": "MsixPackage"
     },
-    "SparkLauncher (Unpackaged)": {
+    "SparkLauncher.WinUI (Unpackaged)": {
       "commandName": "Project"
     }
   }

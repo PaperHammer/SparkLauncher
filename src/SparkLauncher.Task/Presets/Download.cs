@@ -4,7 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SparkLauncher.Models.ResponsibilityChain {
-    public class CheckUpdate {
+namespace SparkLauncher.Task.Presets
+{
+    public class Download
+    {
     }
 }
