@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SparkLauncher.Task.Presets
+namespace SparkLauncher.Tasks.Presets
 {
     public class Verification
     {

@@ -4,20 +4,20 @@ using SparkLauncher.Common.Core;
 using SparkLauncher.Security.Interfaces;
 
 namespace SparkLauncher.Security {
-    public class GenerateKeyPair : ISecurity {
+    internal class GenerateKeyPair : ISecurity {
         public bool CanHandle(CommandType commandType) => commandType == CommandType.Generate;
 
-        public SecurityResponse Execute(SecurityParams args) {
+        public SecurityResponse Execute(SecurityTaskArgs args) {
             return ExecuteAsync(args).GetAwaiter().GetResult();
         }
 
-        public async Task<SecurityResponse> ExecuteAsync(SecurityParams args) {
+        public async Task<SecurityResponse> ExecuteAsync(SecurityTaskArgs args) {
             return await GenerateAsync(args);
         }
 
         // 生成密钥对
-        private static async Task<SecurityResponse> GenerateAsync(SecurityParams args) {
-            var privateArgs = args as GenerateKeyParams ?? throw new ParamsException("typeof SecurityParams error");
+        private static async Task<SecurityResponse> GenerateAsync(SecurityTaskArgs args) {
+            var privateArgs = args as GenerateKeyParams ?? throw new ParamsException("typeof SecurityTaskArgs error");
             string output = privateArgs.KeyOutputDir;
             if (string.IsNullOrEmpty(output)) {
                 throw new ParamsException("<KeyOutputDir> is essential");
@@ -58,7 +58,7 @@ namespace SparkLauncher.Security {
         public string PublicKeyFilePath { get; } = publicKeyPath;
     }
 
-    public class GenerateKeyParams : SecurityParams {
+    public class GenerateKeyParams : SecurityTaskArgs {
         public string KeyOutputDir { get; set; } = string.Empty;
     }
 }

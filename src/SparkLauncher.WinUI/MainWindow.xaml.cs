@@ -5,6 +5,7 @@ using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Media;
 using SparkLauncher.Common.Utils.PInvoke;
+using SparkLauncher.WinUI.Views;
 using WinRT.Interop;
 using WinUIEx;
 
@@ -16,9 +17,6 @@ namespace SparkLauncher.WinUI {
     /// An empty window that can be used on its own or navigated to within a Frame.
     /// </summary>
     public sealed partial class MainWindow : WindowEx {
-        public SolidColorBrush WindowCaptionForeground => (SolidColorBrush)App.Current.Resources["WindowCaptionForeground"];
-        public SolidColorBrush WindowCaptionForegroundDisabled => (SolidColorBrush)App.Current.Resources["WindowCaptionForegroundDisabled"];
-
         public MainWindow() {
             this.InitializeComponent();
 
@@ -28,11 +26,15 @@ namespace SparkLauncher.WinUI {
 
         private void WindowEx_Activated(object _, WindowActivatedEventArgs args) {
             if (args.WindowActivationState == WindowActivationState.Deactivated) {
-                TitleTextBlock.Foreground = WindowCaptionForegroundDisabled;
+                TitleTextBlock.Foreground = _windowCaptionForegroundDisabled;
             }
             else {
-                TitleTextBlock.Foreground = WindowCaptionForeground;
+                TitleTextBlock.Foreground = _windowCaptionForeground;
             }
+        }
+
+        private void ContenFrame_Loaded(object sender, RoutedEventArgs e) {
+            ContenFrame.Navigate(typeof(TaskPipeLine));
         }
 
         private void SetWindowStyle() {
@@ -47,7 +49,7 @@ namespace SparkLauncher.WinUI {
                 titleBar.ExtendsContentIntoTitleBar = true;
                 titleBar.ButtonBackgroundColor = Colors.Transparent;
                 titleBar.ButtonInactiveBackgroundColor = Colors.Transparent;
-                titleBar.ButtonForegroundColor = WindowCaptionForeground.Color;
+                titleBar.ButtonForegroundColor = _windowCaptionForeground.Color;
 
                 AppTitleBar.Loaded += AppTitleBar_Loaded;
                 AppTitleBar.SizeChanged += AppTitleBar_SizeChanged;
@@ -122,5 +124,8 @@ namespace SparkLauncher.WinUI {
             return scaleFactorPercent / 100.0;
         }
         #endregion
+
+        private static readonly SolidColorBrush _windowCaptionForeground = (SolidColorBrush)App.Current.Resources["WindowCaptionForeground"];
+        private static readonly SolidColorBrush _windowCaptionForegroundDisabled = (SolidColorBrush)App.Current.Resources["WindowCaptionForegroundDisabled"];
     }
 }

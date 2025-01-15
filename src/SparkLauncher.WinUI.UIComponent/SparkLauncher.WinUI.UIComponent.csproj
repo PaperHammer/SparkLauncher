@@ -2,27 +2,40 @@
 	<PropertyGroup>
 		<TargetFramework>net8.0-windows10.0.19041.0</TargetFramework>
 		<TargetPlatformMinVersion>10.0.17763.0</TargetPlatformMinVersion>
-		<RootNamespace>SparkLauncher.UIComponent</RootNamespace>
+		<RootNamespace>SparkLauncher.WinUI.UIComponent</RootNamespace>
 		<RuntimeIdentifiers Condition="$([MSBuild]::GetTargetFrameworkVersion('$(TargetFramework)')) &gt;= 8">win-x86;win-x64;win-arm64</RuntimeIdentifiers>
 		<RuntimeIdentifiers Condition="$([MSBuild]::GetTargetFrameworkVersion('$(TargetFramework)')) &lt; 8">win10-x86;win10-x64;win10-arm64</RuntimeIdentifiers>
 		<UseWinUI>true</UseWinUI>
 	</PropertyGroup>
 	<ItemGroup>
-		<None Remove="Data\PendingExeItem.xaml" />
+		<None Remove="Data\PendingTaskItem.xaml" />
 	</ItemGroup>
 
 	<ItemGroup>
 		<PackageReference Include="Microsoft.WindowsAppSDK" Version="1.6.241114003" />
 		<PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.26100.1742" />
+		<PackageReference Include="WinUI3Localizer" Version="2.2.0" />
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\SparkLauncher.Common\SparkLauncher.Common.csproj" />
-		<ProjectReference Include="..\SparkLauncher.Task\SparkLauncher.Task.csproj" />
+		<PRIResource Remove="Strings\en-US\Resources.resw" />
+		<PRIResource Remove="Strings\zh-CN\Resources.resw" />
+	</ItemGroup>
+	<ItemGroup>
+		<Content Include="Strings\en-US\Resources.resw">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+		<Content Include="Strings\zh-CN\Resources.resw">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
 	</ItemGroup>
 
 	<ItemGroup>
-		<Page Update="Data\PendingExeItem.xaml">
+	  <ProjectReference Include="..\SparkLauncher\SparkLauncher.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Page Update="Data\PendingTaskItem.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</Page>
 	</ItemGroup>

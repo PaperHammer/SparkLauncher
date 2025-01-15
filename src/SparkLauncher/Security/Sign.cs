@@ -6,19 +6,19 @@ using SparkLauncher.Security.Interfaces;
 using static SparkLauncher.Common.Core.SignatureException;
 
 namespace SparkLauncher.Security {
-    public class Sign : ISecurity {
+    internal class Sign : ISecurity {
         public bool CanHandle(CommandType commandType) => commandType == CommandType.Sign;
 
-        public SecurityResponse Execute(SecurityParams args) {
+        public SecurityResponse Execute(SecurityTaskArgs args) {
             return ExecuteAsync(args).GetAwaiter().GetResult();
         }
 
-        public async Task<SecurityResponse> ExecuteAsync(SecurityParams args) {
+        public async Task<SecurityResponse> ExecuteAsync(SecurityTaskArgs args) {
             return await SignFilesAsync(args);
         }
 
-        private static async Task<SecurityResponse> SignFilesAsync(SecurityParams args) {
-            var privateArgs = args as SignParams ?? throw new ParamsException("typeof SecurityParams error");
+        private static async Task<SecurityResponse> SignFilesAsync(SecurityTaskArgs args) {
+            var privateArgs = args as SignParams ?? throw new ParamsException("typeof SecurityTaskArgs error");
             if (privateArgs.FilePaths.Length == 0 || string.IsNullOrEmpty(privateArgs.PrivateKeyFilePath) || string.IsNullOrEmpty(privateArgs.SignatureOutputDir)) {
                 throw new ParamsException("<file-path(s)> <private-key-path> <signature-output-path> are essential");
             }
@@ -81,9 +81,8 @@ namespace SparkLauncher.Security {
 
             return signatureFilePath;
         }
-
-
     }
+
     public class SignResponse(List<SignData> signDatas) : SecurityResponse {
         public List<SignData> SignDatas { get; } = signDatas;
     }
@@ -94,7 +93,7 @@ namespace SparkLauncher.Security {
         public string SignatureFilePath { get; } = signaturePath;
     }
 
-    public class SignParams : SecurityParams {
+    public class SignParams : SecurityTaskArgs {
         public string[] FilePaths { get; set; } = [];
         public string PrivateKeyFilePath { get; set; } = string.Empty;
         public string SignatureOutputDir { get; set; } = string.Empty;

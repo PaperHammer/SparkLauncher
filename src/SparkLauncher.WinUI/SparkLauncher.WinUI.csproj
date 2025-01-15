@@ -3,7 +3,7 @@
 		<OutputType>WinExe</OutputType>
 		<TargetFramework>net8.0-windows10.0.19041.0</TargetFramework>
 		<TargetPlatformMinVersion>10.0.17763.0</TargetPlatformMinVersion>
-		<RootNamespace>SparkLauncher</RootNamespace>
+		<RootNamespace>SparkLauncher.WinUI</RootNamespace>
 		<ApplicationManifest>app.manifest</ApplicationManifest>
 		<Platforms>x86;x64;ARM64</Platforms>
 		<RuntimeIdentifiers Condition="$([MSBuild]::GetTargetFrameworkVersion('$(TargetFramework)')) &gt;= 8">win-x86;win-x64;win-arm64</RuntimeIdentifiers>
@@ -14,27 +14,41 @@
 	</PropertyGroup>
 
 	<!-- 导入签名工具任务 -->
-	<UsingTask TaskName="SignTool" AssemblyFile="$(OutputPath)Plugins\SignTool\SignTool.dll" />
+	<!--<UsingTask TaskName="SparkLauncher.MSBuild.SignTool" AssemblyFile="$(SolutionDir)SparkLauncher\bin\Release\net8.0\SparkLauncher.dll" />-->
 
-	<Target Name="SignDlls" AfterTargets="Build" Condition="'$(Configuration)' == 'Release'">
+	<!--MSB4062	未能从程序集 SparkLauncher.dll 加载任务“SparkLauncher.MSBuild.SignTool”。
+	Could not load file or assembly 'System.Runtime, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a' or one of its dependencies. 系统找不到指定的文件。-->
+
+	<!--<Target Name="SignDlls" AfterTargets="Build" Condition="'$(Configuration)' == 'Release'">
 		<ItemGroup>
 			<DllsToSign Include="$(OutputPath)SparkLauncher*.dll" />
 		</ItemGroup>
 
-		<PropertyGroup>
-			<PrivateKeyPath>$(SolutionDir)keys\private.key</PrivateKeyPath>
-			<PublicKeyPath>$(SolutionDir)keys\public.key</PublicKeyPath>
+		<PropertyGroup>			
+			<KeyOutputDir>$(OutputPath)keys</KeyOutputDir>
 		</PropertyGroup>
 
-		<!-- 如果私钥不存在则生成新密钥对 -->
-		<Exec Command="&quot;$(OutputPath)KeyPairGenerator.exe&quot; &quot;$(PrivateKeyPath)&quot; &quot;$(PublicKeyPath)&quot;" Condition="!Exists('$(PrivateKeyPath)')" />
+		--><!-- 生成新密钥对 & 签名所有 DLL --><!--
+		<SignTool KeyOutputDir="$(KeyOutput)" Files="@(DllsToSign)" />
+	</Target>-->
 
-		<!-- 如果私钥不存在则生成新密钥对 -->
-		<SignTool Command="generate" />
+	<Target Name="SignTool" AfterTargets="Build" Condition="'$(Configuration)' == 'Release'">
+		<PropertyGroup>
+			<ToolExe>D:\\Virtuals\\SparkLauncher\\src\\SparkLauncher.Test\\bin\\Release\\net8.0\\SparkLauncher.Test.exe</ToolExe>
+		</PropertyGroup>
 
-		<!-- 签名所有 DLL -->
-		<SignTool Files="@(DllsToSign)" PrivateKeyPath="$(PrivateKeyPath)" PublicKeyPath="$(PublicKeyPath)" />
+		<Error Condition="!Exists('$(ToolExe)')" Text="The tool at '$(ToolExe)' does not exist." />
+
+		<Exec Command="$(ToolExe) $(OutputPath)">
+			<Output TaskParameter="ExitCode" PropertyName="ToolExitCode" />
+		</Exec>
+
+		<Error Condition="'$(ToolExitCode)' != '0'" Text="The external tool exited with code $(ToolExitCode)." />
 	</Target>
+
+	<ItemGroup>
+	  <None Remove="Views\TaskPipeLine.xaml" />
+	</ItemGroup>
 
 	<ItemGroup>
 		<Content Include="Assets\SplashScreen.scale-200.png" />
@@ -47,6 +61,8 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
+		<PackageReference Include="Microsoft.Extensions.Http" Version="8.0.0" />
 		<PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.26100.1742" />
 		<PackageReference Include="Microsoft.WindowsAppSDK" Version="1.6.241114003" />
 		<PackageReference Include="WinUIEx" Version="2.5.0" />
@@ -57,6 +73,7 @@
 	<!--ref: https://learn.microsoft.com/zh-cn/dotnet/core/compatibility/sdk/6.0/duplicate-files-in-output-->
 	<PropertyGroup>
 		<ErrorOnDuplicatePublishOutputFiles>false</ErrorOnDuplicatePublishOutputFiles>
+		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(IsMsixRelease)' != 'true'">
@@ -93,6 +110,11 @@
 	</ItemGroup>
 	<ItemGroup>
 	  <ProjectReference Include="..\SparkLauncher.WinUI.UIComponent\SparkLauncher.WinUI.UIComponent.csproj" />
+	</ItemGroup>
+	<ItemGroup>
+	  <Page Update="Views\TaskPipeLine.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </Page>
 	</ItemGroup>
 
 	<!--

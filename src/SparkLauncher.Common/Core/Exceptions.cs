@@ -1,4 +1,20 @@
 ﻿namespace SparkLauncher.Common.Core {
+    public class VerifySignException : Exception {
+        public string FilePath { get; } = string.Empty;
+
+        public VerifySignException() {
+        }
+
+        public VerifySignException(string message, string filePath)
+            : base(message) {
+            this.FilePath = filePath;
+        }
+
+        public VerifySignException(string message, Exception inner)
+            : base(message, inner) {
+        }
+    }
+
     public class ParamsException : Exception {
         public ParamsException() {
         }
@@ -21,7 +37,7 @@
         public SignatureException(string message)
             : base(message) {
         }
-        
+
         public SignatureException(string message, IEnumerable<SignErrorData> errorDatas)
             : base(message) {
             ErrorDatas = errorDatas;

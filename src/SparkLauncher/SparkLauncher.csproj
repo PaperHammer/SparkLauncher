@@ -1,13 +1,18 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net8.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<!--<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>-->
+	</PropertyGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\SparkLauncher.Common\SparkLauncher.Common.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Microsoft.Build.Framework" Version="17.11.4" />
+		<PackageReference Include="Microsoft.Build.Utilities.Core" Version="17.11.4" />
+	</ItemGroup>
 
+	<ItemGroup>
+		<ProjectReference Include="..\SparkLauncher.Common\SparkLauncher.Common.csproj" />
+	</ItemGroup>
 </Project>

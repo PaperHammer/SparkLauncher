@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using SparkLauncher.Common.Core;
 
-namespace SparkLauncher.Task.Presets
+namespace SparkLauncher.Tasks.Presets
 {
-    public class CheckUpdate
-    {
+    public class CheckUpdate {
     }
 }

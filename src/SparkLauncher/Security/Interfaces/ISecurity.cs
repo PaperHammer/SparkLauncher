@@ -3,15 +3,11 @@
 namespace SparkLauncher.Security.Interfaces {
     public interface ISecurity {
         bool CanHandle(CommandType commandType);
-        SecurityResponse Execute(SecurityParams args);
-        Task<SecurityResponse> ExecuteAsync(SecurityParams args);
+        SecurityResponse Execute(SecurityTaskArgs args);
+        Task<SecurityResponse> ExecuteAsync(SecurityTaskArgs args);
     }
 
-    public abstract class SecurityResponse {
-        //public string PrivateKeyFilePath { get; set; } = string.Empty;
-        //public string PublicKeyFilePath { get; set; } = string.Empty;
-        //public string[] SignatureFilePaths { get; set; } = [];
-    }
+    public abstract class SecurityResponse { }
 
-    public abstract class SecurityParams { }    
+    public abstract class SecurityTaskArgs { }
 }
