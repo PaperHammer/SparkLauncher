@@ -1,11 +1,12 @@
 ﻿using System.Collections.Concurrent;
 using System.Security.Cryptography;
 using SparkLauncher.Common;
-using SparkLauncher.Common.Core;
+using SparkLauncher.Common.Models;
 using SparkLauncher.Security.Interfaces;
-using static SparkLauncher.Common.Core.SignatureException;
+using static SparkLauncher.Common.Models.SignatureException;
 
-namespace SparkLauncher.Security {
+namespace SparkLauncher.Security
+{
     internal class Sign : ISecurity {
         public bool CanHandle(CommandType commandType) => commandType == CommandType.Sign;
 

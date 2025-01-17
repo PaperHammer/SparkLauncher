@@ -16,5 +16,10 @@
             public static string Tasks_Verification { get; } = "Tasks_Verification";
             public static string Tasks_Callback { get; } = "Tasks_Callback";
         }
+
+        public static class ApplicationType {
+            public static bool IsTestBuild { get; } = false;
+            public static bool IsMSIX { get; } = new DesktopBridge.Helpers().IsRunningAsUwp();
+        }
     }
 }

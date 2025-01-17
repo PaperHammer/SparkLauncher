@@ -1,4 +1,4 @@
-﻿namespace SparkLauncher.Common.Core {
+﻿namespace SparkLauncher.Common.Models {
     public class SelfCheckException : Exception {
         public SelfCheckException() {
         }
@@ -11,7 +11,7 @@
             : base(message, inner) {
         }
     }
-    
+
     public class VerifySignException : Exception {
         public string FilePath { get; } = string.Empty;
 
@@ -20,7 +20,7 @@
 
         public VerifySignException(string message, string filePath)
             : base(message) {
-            this.FilePath = filePath;
+            FilePath = filePath;
         }
 
         public VerifySignException(string message, Exception inner)

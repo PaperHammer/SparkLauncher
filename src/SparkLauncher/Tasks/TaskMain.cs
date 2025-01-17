@@ -10,9 +10,7 @@ namespace SparkLauncher.Tasks {
                 IgnoreError = true,
                 TargetDirectory = "D:\\Virtuals\\SparkLauncher\\src\\SparkLauncher.WinUI\\bin\\x64\\Release\\net8.0-windows10.0.19041.0\\win-x64"
             }),
-            new SelfCheck(new SelfCheckRequest(){
-                IgnoreError = true,
-            }),
+            new CheckUpdate(),
             new SelfCheck(new SelfCheckRequest(){
                 IgnoreError = true,
             }),

@@ -1,6 +1,6 @@
 ﻿using System.Security.Cryptography;
 using SparkLauncher.Common;
-using SparkLauncher.Common.Core;
+using SparkLauncher.Common.Models;
 using SparkLauncher.Security.Interfaces;
 
 namespace SparkLauncher.Security {

@@ -1,5 +1,5 @@
 ﻿using SparkLauncher.Common;
-using SparkLauncher.Common.Core;
+using SparkLauncher.Common.Models;
 using SparkLauncher.Security;
 
 namespace SparkLauncher.Tasks.Presets {
@@ -36,6 +36,7 @@ namespace SparkLauncher.Tasks.Presets {
                     }
                     AddMsg(TaskMsgType.Success, $"File '{signData.FilePath}' checked.");
                 }
+
                 AddMsg(TaskMsgType.Info, "SelfCheck done.");
             }
             catch (Exception ex) {
@@ -51,7 +52,7 @@ namespace SparkLauncher.Tasks.Presets {
                 if (Status == RuntimeStatus.Pending) {
                     Status = RuntimeStatus.Succeeded;
                 }
-                //await Task.Delay(500);
+                await Task.Delay(500);
             }
         }
 
