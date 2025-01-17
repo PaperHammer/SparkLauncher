@@ -1,4 +1,17 @@
 ﻿namespace SparkLauncher.Common.Core {
+    public class SelfCheckException : Exception {
+        public SelfCheckException() {
+        }
+
+        public SelfCheckException(string message)
+            : base(message) {
+        }
+
+        public SelfCheckException(string message, Exception inner)
+            : base(message, inner) {
+        }
+    }
+    
     public class VerifySignException : Exception {
         public string FilePath { get; } = string.Empty;
 

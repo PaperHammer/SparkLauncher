@@ -7,10 +7,12 @@ using WinUI3Localizer;
 
 namespace SparkLauncher.WinUI.UIComponent.Utils {
     public class LanguageUtil {
-        public static ILocalizer LocalizerInstacne { get; private set; }
-
         static LanguageUtil() {
             SetInstance();
+        }
+
+        public static string GetI18n(string key) {
+            return _i18n.GetLocalizedString(key);
         }
 
         #region load language       
@@ -73,8 +75,10 @@ namespace SparkLauncher.WinUI.UIComponent.Utils {
         }
 
         private static void SetInstance() {
-            LocalizerInstacne = Localizer.Get();
+            _i18n = Localizer.Get();
         }
         #endregion
+
+        private static ILocalizer _i18n;
     }
 }

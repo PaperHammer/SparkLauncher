@@ -15,4 +15,18 @@
 	<ItemGroup>
 		<ProjectReference Include="..\SparkLauncher.Common\SparkLauncher.Common.csproj" />
 	</ItemGroup>
+
+	<Target Name="SignTool" AfterTargets="Build" Condition="'$(Configuration)' == 'Release'">
+		<PropertyGroup>
+			<ToolExe>D:\\Virtuals\\SparkLauncher\\src\\SparkLauncher.Test\\bin\\Release\\net8.0\\SparkLauncher.Test.exe</ToolExe>
+		</PropertyGroup>
+
+		<Error Condition="!Exists('$(ToolExe)')" Text="The tool at '$(ToolExe)' does not exist." />
+
+		<Exec Command="$(ToolExe) $(OutputPath)">
+			<Output TaskParameter="ExitCode" PropertyName="ToolExitCode" />
+		</Exec>
+
+		<Error Condition="'$(ToolExitCode)' != '0'" Text="The external tool exited with code $(ToolExitCode)." />
+	</Target>
 </Project>

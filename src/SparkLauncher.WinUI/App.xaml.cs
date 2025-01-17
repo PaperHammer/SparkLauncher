@@ -2,8 +2,6 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
 using SparkLauncher.WinUI.UIComponent.Utils;
-using SparkLauncher.WinUI.ViewModels;
-using WinUI3Localizer;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -54,12 +52,7 @@ namespace SparkLauncher.WinUI {
             return provider;
         }
 
-        public static string GetI18n(string key) {
-            return _i18n.GetLocalizedString(key);
-        }
-
         private Window m_window;
         private readonly IServiceProvider _serviceProvider;
-        private static readonly ILocalizer _i18n = LanguageUtil.LocalizerInstacne;
     }
 }

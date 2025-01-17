@@ -63,8 +63,8 @@
             <Frame
                 x:Name="ContenFrame"               
                 Loaded="ContenFrame_Loaded"
-                Grid.Row="2"
-                Padding="10 0"/>
+                Background="{ThemeResource SolidBackgroundFillColorSecondaryBrush}"
+                Grid.Row="2"/>
         </Grid>
     </Grid>
 </winex:WindowEx>

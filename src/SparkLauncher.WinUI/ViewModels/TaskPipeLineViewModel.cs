@@ -6,12 +6,7 @@ using SparkLauncher.Tasks;
 namespace SparkLauncher.WinUI.ViewModels {
     internal partial class TaskPipeLineViewModel : ObservableObject {
         public ObservableCollection<TaskHandler> PendingTaskItems { get; set; } = [];
-
-        private string _taskMsg = string.Empty;
-        public string TaskMsg {
-            get { return _taskMsg; }
-            set { _taskMsg = value; OnPropertyChanged(); }
-        }
+        public ObservableList<TaskMsg> Blocks { get; set; } = [];
 
         private int _selectedTaskIdx = -1;
         public int SelectedTaskIdx {
@@ -19,7 +14,8 @@ namespace SparkLauncher.WinUI.ViewModels {
             set {
                 if (value > -1) {
                     _selectedTaskIdx = value;
-                    TaskMsg = PendingTaskItems[value].TaskMsg;
+                    Blocks.Clear();
+                    Blocks.AddRange(PendingTaskItems[value].TaskMsgs);
                     OnPropertyChanged();
                 }
             }
@@ -30,12 +26,6 @@ namespace SparkLauncher.WinUI.ViewModels {
             TaskMain.OnForward += TaskMain_OnForward;
 
             InitUI();
-        }
-
-        private void TaskMain_OnForward(object sender, Tasks.TaskEventArgs.ForwardEventArgs e) {
-            _dispatcherQueue.TryEnqueue(() => {
-                SelectedTaskIdx = e.Index;
-            });
         }
 
         private void InitUI() {
@@ -55,18 +45,32 @@ namespace SparkLauncher.WinUI.ViewModels {
             }
         }
 
+        private void TaskMain_OnForward(object sender, Tasks.TaskEventArgs.ForwardEventArgs e) {
+            _dispatcherQueue.TryEnqueue(() => {
+                SelectedTaskIdx = e.Index;
+            });
+        }
+
+        private void Task_LatestTaskMsgChanged(object sender, Tasks.TaskEventArgs.TaskPropertyChangedEventArgs e) {
+            _dispatcherQueue.TryEnqueue(() => {
+                Blocks[^1] = e.Msg;
+            });
+        }
+
+        private void Task_LatestTaskMsgAdd(object sender, TaskMsg e) {
+            _dispatcherQueue.TryEnqueue(() => {
+                Blocks.Add(e);
+            });
+        }
+
         private void SubscribeToTaskEvents(TaskHandler task) {
-            task.TaskMsgChanged += Task_TaskMsgChanged;
+            task.LatestTaskMsgChanged += Task_LatestTaskMsgChanged;
+            task.LatestTaskMsgAdd += Task_LatestTaskMsgAdd;
         }
 
         private void UnsubscribeFromTaskEvents(TaskHandler task) {
-            task.TaskMsgChanged -= Task_TaskMsgChanged;
-        }
-
-        private void Task_TaskMsgChanged(object sender, Tasks.TaskEventArgs.TaskPropertyChangedEventArgs e) {
-            _dispatcherQueue.TryEnqueue(() => {
-                TaskMsg = e.TaskMsg;
-            });
+            task.LatestTaskMsgChanged -= Task_LatestTaskMsgChanged;
+            task.LatestTaskMsgAdd -= Task_LatestTaskMsgAdd;
         }
 
         private readonly DispatcherQueue _dispatcherQueue;

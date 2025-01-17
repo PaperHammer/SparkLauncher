@@ -1,4 +1,3 @@
-using System.Diagnostics;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using SparkLauncher.WinUI.ViewModels;
@@ -14,11 +13,12 @@ namespace SparkLauncher.WinUI.Views {
         public TaskPipeLine() {
             this.InitializeComponent();
 
-            _viewModel = new TaskPipeLineViewModel();
+            _viewModel = new TaskPipeLineViewModel();            
             this.MainGrid.DataContext = _viewModel;
         }
 
         private void Page_Loaded(object sender, RoutedEventArgs e) {
+            TaskListView.Focus(FocusState.Pointer);
             _viewModel.Run();
         }
 
@@ -27,7 +27,7 @@ namespace SparkLauncher.WinUI.Views {
                 foreach (var item in e.AddedItems) {
                     ListViewItem litem = (sender as ListView).ContainerFromItem(item) as ListViewItem;
                     if (litem != null) {
-                        var v = VisualStateManager.GoToState(litem, "Selected", true);
+                        VisualStateManager.GoToState(litem, "Selected", true);
                     }
                 }
             }

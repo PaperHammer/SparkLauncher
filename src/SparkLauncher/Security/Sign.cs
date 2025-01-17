@@ -30,8 +30,9 @@ namespace SparkLauncher.Security {
             ConcurrentBag<SignErrorData> errorDatas = [];
             ConcurrentBag<SignData> signedDatas = [];
 
-            if (!Directory.Exists(privateArgs.SignatureOutputDir)) {
-                Directory.CreateDirectory(privateArgs.SignatureOutputDir);
+            string output = Path.Combine(privateArgs.SignatureOutputDir, "keys");
+            if (!Directory.Exists(output)) {
+                Directory.CreateDirectory(output);
             }
 
             var signTasks = privateArgs.FilePaths.Select(async filePath => {
@@ -47,7 +48,7 @@ namespace SparkLauncher.Security {
                     string fileNameWithoutExtension = Path.GetFileNameWithoutExtension(filePath);
                     byte[] signature = await SignFileInternalAsync(filePath, rsa);
 
-                    string signatureFilePath = await WriteSignatureToFileAsync(privateArgs.SignatureOutputDir, fileNameWithoutExtension, signature);
+                    string signatureFilePath = await WriteSignatureToFileAsync(output, fileNameWithoutExtension, signature);
                     signedDatas.Add(new SignData(signature, filePath, signatureFilePath));
                 }
                 catch (Exception ex) {

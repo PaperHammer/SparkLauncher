@@ -1,7 +1,6 @@
 ﻿using SparkLauncher.Common;
 using SparkLauncher.Common.Core;
 using SparkLauncher.Security;
-using SparkLauncher.Tasks.TaskEventArgs;
 
 namespace SparkLauncher.Tasks.Presets {
     public class SelfCheck : TaskHandler {
@@ -18,43 +17,65 @@ namespace SparkLauncher.Tasks.Presets {
         public override async Task HandleAsync() {
             try {
                 Status = RuntimeStatus.Pending;
+                await Task.Delay(1000);
 
                 Request ??= new SelfCheckRequest();
                 if (Request is not SelfCheckRequest privateArgs) throw new ArgumentException();
-                
-                TaskMsg += $"{DateTime.Now}: SelfCheck running...\n";
-                foreach (var signData in privateArgs.SignDatas) {
+                AddMsg(TaskMsgType.Info, "SelfCheck running...");
+
+                string pulicKeyFilePath = Path.Combine(privateArgs.TargetDirectory, "keys", "public_key.txt");
+                List<SignData> signDatas = await GetSignDatasAsync(privateArgs.TargetDirectory);
+
+                foreach (var signData in signDatas) {
                     if (await SecurityMain.RunAsync(CommandType.VerifySign, new VerifySignParams() {
                         FilePath = signData.FilePath,
                         Signature = signData.Signature,
-                        PublicKeyPem = File.ReadAllText(privateArgs.PublicKeyFilePath),
+                        PublicKeyPem = File.ReadAllText(pulicKeyFilePath),
                     }) is not VerifySignResponse verifySignRes || !verifySignRes.IsVerifid) {
                         throw new VerifySignException($"SelfCheck failed for the file: ${signData.FilePath}", signData.FilePath);
                     }
-                    TaskMsg += $"{DateTime.Now}: file '{signData.FilePath}' checked.\n";
+                    AddMsg(TaskMsgType.Success, $"File '{signData.FilePath}' checked.");
                 }
-                TaskMsg += $"{DateTime.Now}: SelfCheck done.\n";
+                AddMsg(TaskMsgType.Info, "SelfCheck done.");
             }
             catch (Exception ex) {
                 Status = RuntimeStatus.Failed;
-
-                TaskMsg += $"{DateTime.Now}: Exception-{ex.Message}\n";
-                if (Request == null || !Request.IgnoreFailed) {
+                AddMsg(TaskMsgType.Error, $"Exception-{ex.Message}");
+                if (Request == null || !Request.IgnoreError) {
                     throw;
                 }
-                TaskMsg += $"{DateTime.Now}: SelfCheck IgnoreFailed.\n";
+                AddMsg(TaskMsgType.Warn, $"SelfCheck IgnoreError.");
             }
             finally {
                 // 避免覆盖 Failed
                 if (Status == RuntimeStatus.Pending) {
                     Status = RuntimeStatus.Succeeded;
                 }
+                //await Task.Delay(500);
             }
+        }
+
+        private async Task<List<SignData>> GetSignDatasAsync(string directory) {
+            AddMsg(TaskMsgType.Info, "Reading datas...");
+
+            List<SignData> signDatas = [];
+
+            string[] filePaths = Directory.GetFiles(directory, "SparkLauncher*.dll");
+            string[] sigFilePaths = Directory.GetFiles(Path.Combine(directory, "keys"), "SparkLauncher*.sig");
+            foreach (string sigFilePath in sigFilePaths) {
+                string targetFileName = Path.GetFileNameWithoutExtension(sigFilePath);
+                string? filePath = filePaths.FirstOrDefault(x => Path.GetFileNameWithoutExtension(x) == targetFileName)
+                    ?? throw new SelfCheckException($"The target file does not exist, and the module may be incomplete. {targetFileName}");
+
+                byte[] sign = await File.ReadAllBytesAsync(sigFilePath);
+                signDatas.Add(new(sign, filePath, sigFilePath));
+            }
+
+            return signDatas;
         }
     }
 
     public class SelfCheckRequest : TaskRequest {
-        public string PublicKeyFilePath { get; set; } = string.Empty;
-        public List<SignData> SignDatas { get; set; } = [];
+        public string TargetDirectory { get; set; } = string.Empty;
     }
 }

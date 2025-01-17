@@ -11,4 +11,11 @@
         Sign,
         VerifySign
     }
+
+    public enum TaskMsgType {
+        Info,
+        Success,
+        Warn,
+        Error,
+    }
 }

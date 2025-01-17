@@ -1,4 +1,5 @@
-﻿using System.Security.Cryptography;
+﻿using System.Diagnostics;
+using System.Security.Cryptography;
 using SparkLauncher.Common;
 using SparkLauncher.Common.Core;
 using SparkLauncher.Security.Interfaces;
@@ -17,12 +18,12 @@ namespace SparkLauncher.Security {
 
         // 生成密钥对
         private static async Task<SecurityResponse> GenerateAsync(SecurityTaskArgs args) {
-            var privateArgs = args as GenerateKeyParams ?? throw new ParamsException("typeof SecurityTaskArgs error");
-            string output = privateArgs.KeyOutputDir;
-            if (string.IsNullOrEmpty(output)) {
+            var privateArgs = args as GenerateKeyParams ?? throw new ParamsException("typeof SecurityTaskArgs error");            
+            if (string.IsNullOrEmpty(privateArgs.KeyOutputDir)) {
                 throw new ParamsException("<KeyOutputDir> is essential");
             }
-
+            
+            string output = Path.Combine(privateArgs.KeyOutputDir, "keys");
             if (!Directory.Exists(output)) {
                 Directory.CreateDirectory(output);
             }

@@ -8,11 +8,16 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:taskData="using:SparkLauncher.Tasks"
     xmlns:data="using:SparkLauncher.WinUI.UIComponent.Data"
+    xmlns:cvs="using:SparkLauncher.WinUI.UIComponent.Converters"
     Loaded="Page_Loaded"
     mc:Ignorable="d"
-    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    Margin="10 0">
 
     <Page.Resources>
+        <cvs:KeyToI18nConverter x:Key="KeyToI18n"/>
+        <cvs:MessageTypeToColorConverter x:Key="MsgToColor"/>
+        <cvs:MessageTypeToStringConverter x:Key="MsgToString"/>
+
         <Style x:Key="TaskPipeLineListContainersStyle" TargetType="ListViewItem">
             <Setter Property="Template">
                 <Setter.Value>
@@ -85,10 +90,15 @@
                             <Border 
                                 x:Name="BackgroundBorder"
                                 BorderBrush="{ThemeResource SystemFillColorAttentionBrush}"
-                                Background="{ThemeResource ListViewItemPointerOverBackgroundThemeBrush}"
                                 Opacity="0"
                                 CornerRadius="4"
                                 RenderTransformOrigin="0.5 0.5">
+                                <Border.Background>
+                                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                        <GradientStop Color="LightGray" Offset="0.0"/>
+                                        <GradientStop Color="Gray" Offset="1.0"/>
+                                    </LinearGradientBrush>
+                                </Border.Background>
                                 <Border.RenderTransform>
                                     <ScaleTransform ScaleX="1" ScaleY="1"/>
                                 </Border.RenderTransform>
@@ -102,7 +112,7 @@
         <DataTemplate x:Key="TaskItemTemplate" x:DataType="taskData:TaskHandler">
             <ListViewItem>
                 <data:PendingTaskItem                     
-                    TaskName="{Binding TaskName}"                    
+                    TaskName="{Binding TaskName, Converter={StaticResource KeyToI18n}}"                    
                     Status="{Binding Status}"/>
             </ListViewItem>
         </DataTemplate>
@@ -118,26 +128,43 @@
 
         <ListView
             x:Name="TaskListView" 
-            Padding="0 0 15 0"
+            Padding="0 0 16 0"
             SelectionMode="Single"
             SelectedIndex="{Binding SelectedTaskIdx, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
             ItemsSource="{Binding PendingTaskItems}"
             ItemTemplate="{StaticResource TaskItemTemplate}"
-            ItemContainerStyle="{StaticResource TaskPipeLineListContainersStyle}"  
-            SingleSelectionFollowsFocus="False"
-            SelectionChanged="TaskListView_SelectionChanged"/>
+            ItemContainerStyle="{StaticResource TaskPipeLineListContainersStyle}"
+            SelectionChanged="TaskListView_SelectionChanged"
+            FocusVisualPrimaryThickness="0"
+            FocusVisualSecondaryThickness="0"/>
 
-        <ScrollView
-            Grid.Column="2" 
-            Padding="5 0 15 0"
-            Background="{ThemeResource SolidBackgroundFillColorSecondaryBrush}">
-            <RichTextBlock
-                TextAlignment="Justify"
-                Padding="8">
-                <Paragraph>
-                    <Run Text="{Binding TaskMsg}" />
-                </Paragraph>
-            </RichTextBlock>
-        </ScrollView>
+        <ItemsView 
+            Grid.Column="2"
+            ItemsSource="{Binding Blocks}"
+            ScrollViewer.VerticalScrollBarVisibility="Visible"
+            SelectionMode="None">
+            <ItemsView.ItemTemplate>
+                <DataTemplate x:DataType="taskData:TaskMsg">
+                    <ItemContainer>
+                        <RichTextBlock 
+                            TextAlignment="Start" 
+                            Padding="4" 
+                            TextWrapping="WrapWholeWords">
+                            <Paragraph                                   
+                                ScrollViewer.VerticalScrollBarVisibility="Auto">
+                                <Run Text="{Binding MsgType, Converter={StaticResource MsgToString}}" 
+                                     FontWeight="Bold" 
+                                     Foreground="{Binding MsgType, Converter={StaticResource MsgToColor}}"/>
+
+                                <Run Text="{Binding DateTime}" Foreground="Gray"/>
+
+                                <Run Text="{Binding Content}"/>
+                            </Paragraph>
+                        </RichTextBlock>
+                    </ItemContainer>
+                    
+                </DataTemplate>
+            </ItemsView.ItemTemplate>
+        </ItemsView>
     </Grid>
 </Page>

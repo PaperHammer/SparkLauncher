@@ -7,16 +7,17 @@ namespace SparkLauncher.Tasks {
 
         public static List<TaskHandler> TasksInLine { get; } = [
             new SelfCheck(new SelfCheckRequest(){
-                IgnoreFailed = true,
+                IgnoreError = true,
+                TargetDirectory = "D:\\Virtuals\\SparkLauncher\\src\\SparkLauncher.WinUI\\bin\\x64\\Release\\net8.0-windows10.0.19041.0\\win-x64"
             }),
             new SelfCheck(new SelfCheckRequest(){
-                IgnoreFailed = true,
+                IgnoreError = true,
             }),
             new SelfCheck(new SelfCheckRequest(){
-                IgnoreFailed = true,
+                IgnoreError = true,
             }),
             new SelfCheck(new SelfCheckRequest(){
-                IgnoreFailed = true,
+                IgnoreError = true,
             }),
             new SelfCheck(),
             new SelfCheck(),
